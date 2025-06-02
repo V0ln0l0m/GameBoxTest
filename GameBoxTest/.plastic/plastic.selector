@@ -1,0 +1,4 @@
+repository "GameBoxTest/GameBoxTest@10171255534108@cloud"
+  path "/"
+    br "/main"
+    co "/main"
