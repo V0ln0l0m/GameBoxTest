@@ -7,10 +7,17 @@ public class PointsFinding : MonoBehaviour
     [SerializeField] GameObject[] points;
     [SerializeField] PointFeatures[] pointsFeatures;
 
+    bool firstFinding = false;
+
 
     private void Start()
     {
-        FindingPoints();
+        if (!firstFinding)
+        {
+            firstFinding = true;
+            FindingPoints();
+        }
+            
     }
 
     public void FindingPoints()
@@ -24,8 +31,10 @@ public class PointsFinding : MonoBehaviour
             {
                 points[i].transform.localPosition = new Vector3(Random.Range(-750,350), Random.Range(-350, 350),0);
                 points[i].SetActive(true);
+                pointsFeatures[i].ChooseLevel_Name();
             }
         }
+        PointSelection(-1);
     }
 
     public void PointSelection(int numberPoint)

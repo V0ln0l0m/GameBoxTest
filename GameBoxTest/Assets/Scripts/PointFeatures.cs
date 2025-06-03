@@ -24,17 +24,11 @@ public class PointFeatures : MonoBehaviour
 
     private void Awake()
     {
-        image = GetComponent<Image>();
+        image = transform.GetChild(0).GetComponent<Image>();
     }
 
-    void Start()
-    {
-        ChooseLevel_Name();
-        ChoosePosPanel();
 
-    }
-
-    void ChooseLevel_Name()
+    public void ChooseLevel_Name()
     {
         levelPoint = Random.Range(1, 5);
         levelText.text = "Уровень " + levelPoint;
@@ -45,9 +39,7 @@ public class PointFeatures : MonoBehaviour
 
     void ChoosePosPanel()
     {
-        pointInfoPanel.SetActive(false);
-
-        if (transform.position.x > -210)
+        if (transform.localPosition.x > -210)
         {
             if (transform.position.y > 0)
                 pointInfoPanel.transform.localPosition = new Vector3(-140, -100, 0);
@@ -56,7 +48,7 @@ public class PointFeatures : MonoBehaviour
         }
         else
         {
-            if (transform.position.y > 0)
+            if (transform.localPosition.y > 0)
                 pointInfoPanel.transform.localPosition = new Vector3(140, -100, 0);
             else
                 pointInfoPanel.transform.localPosition = new Vector3(140, 100, 0);
@@ -67,6 +59,7 @@ public class PointFeatures : MonoBehaviour
     {
         image.color = selectColor;
         pointInfoPanel.SetActive(true);
+        ChoosePosPanel();
     }
 
     public void DeSelectPoint()
