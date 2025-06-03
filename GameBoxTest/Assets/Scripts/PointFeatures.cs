@@ -18,8 +18,8 @@ public class PointFeatures : MonoBehaviour
     private string namePoint;
 
     Image image;
-    Color mainColor = new Color(1, 0.43f, 0.1f);
-    Color selectColor = new Color(0.1f, 0.85f, 0.1f);
+    Color mainColor = new Color(0.25f, 0.04f, 0.03f);  //(1, 0.43f, 0.1f)
+    Color selectColor = new Color(0.9f, 0.7f, 0f);  //(0.1f, 0.85f, 0.1f)
 
 
     private void Awake()
