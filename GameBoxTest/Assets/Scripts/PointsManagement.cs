@@ -8,6 +8,9 @@ public class PointsManagement : MonoBehaviour
     [SerializeField] PointFeatures[] pointsFeatures;
 
     public static bool firstFinding = false;
+    public static Vector3[] pointsPos;
+    public static int pointsVisible;
+
     Coroutine findPointsCor;
 
     private void Start()
@@ -15,9 +18,20 @@ public class PointsManagement : MonoBehaviour
         if (!firstFinding)
         {
             firstFinding = true;
+            pointsPos = new Vector3[points.Length];
             FindingPoints();
         }
-            
+        else
+        {
+            for (int i = 0; i < points.Length; i++)
+            {
+                if (i < pointsVisible)
+                    points[i].transform.localPosition = pointsPos[i];
+                else
+                    points[i].SetActive(false);
+            }
+            PointSelection(-1);
+        }
     }
 
     public void FindingPoints()
@@ -25,7 +39,7 @@ public class PointsManagement : MonoBehaviour
         if (findPointsCor != null)
             StopCoroutine(findPointsCor);
         findPointsCor = StartCoroutine(FindPoints());
-        //int numberOfPoints = Random.Range(3, 5);
+        //int numberOfPoints = Random.Range(3, 6);
 
         //for (int i = 0; i < points.Length; i++)
         //{
@@ -49,19 +63,19 @@ public class PointsManagement : MonoBehaviour
             points[i].SetActive(false);
         }
 
-        int numberOfPoints = Random.Range(3, 6);
+        pointsVisible = Random.Range(3, 6);
 
-        for (int i = 0; i < numberOfPoints; i++)
+        for (int i = 0; i < pointsVisible; i++)
         {
-            points[i].transform.localPosition = new Vector3(Random.Range(-750, 350), Random.Range(-350, 350), 0);
-
+            pointsPos[i] = points[i].transform.localPosition = new Vector3(Random.Range(-750, 350), Random.Range(-350, 350), 0);
+            
             for (int j = 0; j < points.Length; j++)  // Проверка дистанции между точками и изменение положения, если ближе 100 к другим
             {
                 if (i != j && points[j].activeInHierarchy)
                 {
                     if (Vector3.Distance(points[i].transform.position, points[j].transform.position) < 100)
                     {
-                        points[i].transform.localPosition = new Vector3(Random.Range(-750, 350), Random.Range(-350, 350), 0);
+                        pointsPos[i] = points[i].transform.localPosition = new Vector3(Random.Range(-750, 350), Random.Range(-350, 350), 0);
                         j--;
                     }
                 }
