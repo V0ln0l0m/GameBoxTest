@@ -7,7 +7,7 @@ public class PointsManagement : MonoBehaviour
     [SerializeField] GameObject[] points;
     [SerializeField] PointFeatures[] pointsFeatures;
 
-    bool firstFinding = false;
+    public static bool firstFinding = false;
     Coroutine findPointsCor;
 
     private void Start()
