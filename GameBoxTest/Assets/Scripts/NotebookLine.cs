@@ -12,6 +12,8 @@ public class NotebookLine : MonoBehaviour
     [SerializeField] TextMeshProUGUI eventText;
     [SerializeField] TextMeshProUGUI dateText;
 
+    [SerializeField] Button connectButton;
+
     [SerializeField] Image backgroundL;
     [SerializeField] Image backgroundR;
 
@@ -29,7 +31,8 @@ public class NotebookLine : MonoBehaviour
     public string date;
 
     public bool main;
-    public int overlapFound;
+    public NotebookLine mainConnection;
+    public int connectedLines;
 
     bool select = false;
 
@@ -42,13 +45,27 @@ public class NotebookLine : MonoBehaviour
 
     public void LineCreate()
     {
-        nameObject = names[Random.Range(0,names.Length)];
-        place = places[Random.Range(0, places.Length)];
-        eventHappen = events[Random.Range(0, events.Length)];
+        int percentKnown = NotebookManager.instance.percentKnownData;
+
+        if (Random.Range(0, 99) < percentKnown)
+            nameObject = names[Random.Range(0, names.Length)];
+        else
+            nameObject = "???";
+
+        if (Random.Range(0, 99) < percentKnown)
+            place = places[Random.Range(0, places.Length)];
+        else
+            place = "???";
+
+        if (Random.Range(0, 99) < percentKnown)
+            eventHappen = events[Random.Range(0, events.Length)];
+        else
+            eventHappen = "???";
+
         DateCreate();
         main = true;
         select = false;
-        overlapFound = 0;
+        connectedLines = 0;
 
         NoteBookStorage.notebookLines.Add(this);
     }
@@ -92,6 +109,18 @@ public class NotebookLine : MonoBehaviour
         placeText.text = place;
         eventText.text = eventHappen;
         dateText.text = date;
+
+        if (nameObject != "???" && place != "???" && eventHappen != "???")
+            connectButton.interactable = true;
+        else
+            connectButton.interactable = false;
+
+        if (!main)
+            connectButton.gameObject.SetActive(false);
+        else
+            connectButton.gameObject.SetActive(true);
+
+
         UpdateBackgrColor();
     }
 
@@ -99,9 +128,86 @@ public class NotebookLine : MonoBehaviour
     {
         if (select)
             backgroundL.color = backgroundR.color = selectColor;
-        else if (overlapFound > 0)
+        else if (connectedLines > 0 || !main)
             backgroundL.color = backgroundR.color = overlapFoundColor;
         else
             backgroundL.color = backgroundR.color = mainColor;
+    }
+
+    public void IdentSelectedLine()
+    {
+        if (main)
+            NotebookManager.selectedLine = this;
+        else
+            NotebookManager.selectedLine = mainConnection;
+
+        NotebookManager.instance.SelectionLine();
+        
+    }
+
+    public void ConnectLine()
+    {
+        NotebookLine selectLine = NotebookManager.selectedLine;
+        int indexSellectLine = NoteBookStorage.notebookLines.IndexOf(selectLine);
+        int indexLine = NoteBookStorage.notebookLines.IndexOf(this);
+
+
+        if (selectLine != null && selectLine.nameObject == nameObject && selectLine.place != "???" &&
+            selectLine.eventHappen != "???" && selectLine != this)
+        {
+            int newIndex = indexSellectLine + selectLine.connectedLines;
+            bool above = indexLine < indexSellectLine; 
+            if (!above) 
+                newIndex++;
+            transform.SetSiblingIndex(newIndex);
+            
+            selectLine.connectedLines++;
+            main = false;
+            select = true;
+            mainConnection = selectLine;
+            
+            NoteBookStorage.notebookLines.RemoveAt(indexLine);
+            NoteBookStorage.notebookLines.Insert(newIndex, this);
+
+            UpdateUI();
+
+            if (connectedLines > 0)
+            {
+                for (int i = 0; i < connectedLines; i++)
+                {
+                    NotebookLine connectLine;
+                    if (!above)
+                    {
+                        newIndex++;
+                        indexLine++;
+                    }
+                    
+                    connectLine = NoteBookStorage.notebookLines[indexLine];
+
+                    connectLine.transform.SetSiblingIndex(newIndex);
+
+                    selectLine.connectedLines++;
+                    connectLine.select = true;
+                    connectLine.mainConnection = selectLine;
+
+                    NoteBookStorage.notebookLines.RemoveAt(indexLine);
+                    NoteBookStorage.notebookLines.Insert(newIndex, connectLine);
+
+                    connectLine.UpdateUI();
+                }
+            }
+        }
+    }
+
+    public void SelectLine()
+    {
+        select = true;
+        UpdateBackgrColor();
+    }
+
+    public void DeSelectLine()
+    {
+        select = false;
+        UpdateBackgrColor();
     }
 }
