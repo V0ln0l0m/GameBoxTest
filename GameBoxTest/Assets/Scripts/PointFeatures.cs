@@ -11,11 +11,8 @@ public class PointFeatures : MonoBehaviour
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] TextMeshProUGUI nameText;
 
-
-    private string[] namesTest = { "Владимир", "Петр", "Андрей", "Владислав", "Дмитрий", };
-
-    private int levelPoint;
-    private string namePoint;
+    public int levelPoint;
+    public string namePoint;
 
     Image image;
     Color mainColor = new Color(0.25f, 0.04f, 0.03f);  //(1, 0.43f, 0.1f)
@@ -30,11 +27,19 @@ public class PointFeatures : MonoBehaviour
 
     public void ChooseLevel_Name()
     {
-        levelPoint = Random.Range(1, 5);
-        levelText.text = "Уровень " + levelPoint;
+        int namberName = Random.Range(0, PointsManagement.nameList.Count);
+        namePoint = PointsManagement.nameList[namberName];
+        
+        int maxLevel = PointsManagement.levelList[namberName];
+        levelPoint = Random.Range(1, maxLevel + 1);
 
-        namePoint = namesTest[Random.Range(0, 5)];
+        UpdateUIPanel();
+    }
+
+    public void UpdateUIPanel()
+    {
         nameText.text = namePoint;
+        levelText.text = "Уровень " + levelPoint;
     }
 
     void ChoosePosPanel()

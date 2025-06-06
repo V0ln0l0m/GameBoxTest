@@ -25,22 +25,25 @@ public class NotebookManager : MonoBehaviour
     {
         if (NoteBookStorage.filled)
         {
-            int count = NoteBookStorage.notebookLines.Count;
+            List<NotebookLine> linesListStorage = NoteBookStorage.notebookLines;
+            int count = linesListStorage.Count;
             for (int i = 0; i < count; i++)
             {
                 GameObject line = Instantiate(linePrefab, spaceForLines);
                 NotebookLine lineScript = line.GetComponent<NotebookLine>();
 
-                lineScript.nameObject = NoteBookStorage.notebookLines[i].nameObject;
-                lineScript.place = NoteBookStorage.notebookLines[i].place;
-                lineScript.eventHappen = NoteBookStorage.notebookLines[i].eventHappen;
-                lineScript.date = NoteBookStorage.notebookLines[i].date;
-                lineScript.main = NoteBookStorage.notebookLines[i].main;
-                lineScript.connectedLines = NoteBookStorage.notebookLines[i].connectedLines;
-                lineScript.mainConnection = NoteBookStorage.notebookLines[i].mainConnection;
+                lineScript.nameObject = linesListStorage[i].nameObject;
+                lineScript.place = linesListStorage[i].place;
+                lineScript.eventHappen = linesListStorage[i].eventHappen;
+                lineScript.date = linesListStorage[i].date;
+                lineScript.main = linesListStorage[i].main;
+                lineScript.connectedLines = linesListStorage[i].connectedLines;
+                lineScript.namberMainConn = linesListStorage[i].namberMainConn;
+                if (!lineScript.main)
+                    lineScript.mainConnection = linesListStorage[lineScript.namberMainConn];
                 lineScript.UpdateUI();
 
-                NoteBookStorage.notebookLines[i] = lineScript;
+                linesListStorage[i] = lineScript;
             }
         }
         else

@@ -32,6 +32,8 @@ public class NotebookLine : MonoBehaviour
 
     public bool main;
     public NotebookLine mainConnection;
+    public int namberMainConn;
+
     public int connectedLines;
 
     bool select = false;
@@ -148,15 +150,15 @@ public class NotebookLine : MonoBehaviour
     public void ConnectLine()
     {
         NotebookLine selectLine = NotebookManager.selectedLine;
-        int indexSellectLine = NoteBookStorage.notebookLines.IndexOf(selectLine);
+        int indexSelectLine = NoteBookStorage.notebookLines.IndexOf(selectLine);
         int indexLine = NoteBookStorage.notebookLines.IndexOf(this);
 
 
         if (selectLine != null && selectLine.nameObject == nameObject && selectLine.place != "???" &&
             selectLine.eventHappen != "???" && selectLine != this)
         {
-            int newIndex = indexSellectLine + selectLine.connectedLines;
-            bool above = indexLine < indexSellectLine; 
+            int newIndex = indexSelectLine + selectLine.connectedLines;
+            bool above = indexLine < indexSelectLine; 
             if (!above) 
                 newIndex++;
             transform.SetSiblingIndex(newIndex);
@@ -196,6 +198,21 @@ public class NotebookLine : MonoBehaviour
                     connectLine.UpdateUI();
                 }
             }
+        }
+        UpdNamberMainConnect();
+    }
+
+    void UpdNamberMainConnect()
+    {
+        List<NotebookLine> lineList = NoteBookStorage.notebookLines;
+
+        for (int i = 0;i < lineList.Count;i++)
+        {
+            if (!lineList[i].main)
+            {
+                lineList[i].namberMainConn = lineList.IndexOf(lineList[i].mainConnection);
+            }
+            
         }
     }
 

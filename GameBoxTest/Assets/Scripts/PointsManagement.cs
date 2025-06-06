@@ -5,9 +5,13 @@ using UnityEngine;
 public class PointsManagement : MonoBehaviour
 {
     [SerializeField] GameObject[] points;
-    [SerializeField] PointFeatures[] pointsFeatures;
+    public static PointFeatures[] pointsFeatures;
 
-    public static bool firstFinding = false;
+    public static List<string> nameList = new List<string>();
+    public static List<int> levelList = new List<int>();
+
+    public static bool firstFindingDone = false;
+
     public static Vector3[] pointsPos;
     public static int pointsVisible;
 
@@ -15,10 +19,20 @@ public class PointsManagement : MonoBehaviour
 
     private void Start()
     {
-        if (!firstFinding)
+        SearchPointNames();
+
+
+        if (!firstFindingDone)
         {
-            firstFinding = true;
+            firstFindingDone = true;
             pointsPos = new Vector3[points.Length];
+
+            pointsFeatures = new PointFeatures[points.Length];
+            for (int i = 0; i < points.Length; i++)
+            {
+                pointsFeatures[i] = points[i].GetComponent<PointFeatures>();
+            }
+
             FindingPoints();
         }
         else
@@ -26,9 +40,20 @@ public class PointsManagement : MonoBehaviour
             for (int i = 0; i < points.Length; i++)
             {
                 if (i < pointsVisible)
+                {
                     points[i].transform.localPosition = pointsPos[i];
+
+                    points[i].GetComponent<PointFeatures>().namePoint = pointsFeatures[i].namePoint;
+                    points[i].GetComponent<PointFeatures>().levelPoint = pointsFeatures[i].levelPoint;
+                    pointsFeatures[i] = points[i].GetComponent<PointFeatures>();
+                    pointsFeatures[i].UpdateUIPanel();
+                }
                 else
+                {
+                    pointsFeatures[i] = points[i].GetComponent<PointFeatures>();
                     points[i].SetActive(false);
+                }
+                    
             }
             PointSelection(-1);
         }
@@ -39,19 +64,6 @@ public class PointsManagement : MonoBehaviour
         if (findPointsCor != null)
             StopCoroutine(findPointsCor);
         findPointsCor = StartCoroutine(FindPoints());
-        //int numberOfPoints = Random.Range(3, 6);
-
-        //for (int i = 0; i < points.Length; i++)
-        //{
-        //    points[i].SetActive(false);
-        //    if (i < numberOfPoints)
-        //    {
-        //        points[i].transform.localPosition = new Vector3(Random.Range(-750,350), Random.Range(-350, 350),0);
-        //        points[i].SetActive(true);
-        //        pointsFeatures[i].ChooseLevel_Name();
-        //    }
-        //}
-        //PointSelection(-1);
     }
 
     IEnumerator FindPoints()
@@ -97,8 +109,31 @@ public class PointsManagement : MonoBehaviour
                 pointsFeatures[i].SelectPoint();
             else
                 pointsFeatures[i].DeSelectPoint();
+        }
+    }
 
-
+    void SearchPointNames()
+    {
+        if (NoteBookStorage.notebookLines != null)
+        {
+            List<NotebookLine> storageList = NoteBookStorage.notebookLines;
+            for (int i = 0; i < storageList.Count; i++)
+            {
+                if (storageList[i].nameObject != "???" && storageList[i].main)
+                {
+                    if (!nameList.Contains(storageList[i].nameObject))
+                    {
+                        nameList.Add(storageList[i].nameObject);
+                        levelList.Add(storageList[i].connectedLines+1);
+                    }
+                    else
+                    {
+                        int index = nameList.IndexOf(storageList[i].nameObject);
+                        if (levelList[index] < storageList[i].connectedLines+1)
+                            levelList[index] = storageList[i].connectedLines+1;
+                    }
+                }
+            }
         }
     }
 }
