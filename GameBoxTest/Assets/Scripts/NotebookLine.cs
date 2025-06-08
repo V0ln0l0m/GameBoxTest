@@ -44,23 +44,22 @@ public class NotebookLine : MonoBehaviour
     string[] events = {"похищение", "замечен НЛО", "контакт с ИС", "странные звуки", "странное поведение", "необычное событие", "потеря памяти", "вспышки в темноте", "следы ИО "};
 
 
-
     public void LineCreate()
     {
         int percentKnown = NotebookManager.instance.percentKnownData;
 
-        if (Random.Range(0, 99) < percentKnown)
-            nameObject = names[Random.Range(0, names.Length)];
+        if (Random.Range(0, 100) < percentKnown)
+            nameObject = ChoosingName();
         else
             nameObject = "???";
 
-        if (Random.Range(0, 99) < percentKnown)
-            place = places[Random.Range(0, places.Length)];
+        if (Random.Range(0, 100) < percentKnown)
+            place = ChoosingPlace();
         else
             place = "???";
 
-        if (Random.Range(0, 99) < percentKnown)
-            eventHappen = events[Random.Range(0, events.Length)];
+        if (Random.Range(0, 100) < percentKnown)
+            eventHappen = ChoosingEvent();
         else
             eventHappen = "???";
 
@@ -70,6 +69,21 @@ public class NotebookLine : MonoBehaviour
         connectedLines = 0;
 
         NoteBookStorage.notebookLines.Add(this);
+    }
+
+    public string ChoosingName()
+    {
+        return names[Random.Range(0, names.Length)];
+    }
+
+    public string ChoosingPlace()
+    {
+        return places[Random.Range(0, places.Length)];
+    }
+
+    public string ChoosingEvent()
+    {
+        return events[Random.Range(0, events.Length)];
     }
 
     void DateCreate()
@@ -226,5 +240,55 @@ public class NotebookLine : MonoBehaviour
     {
         select = false;
         UpdateBackgrColor();
+    }
+
+    public void AppearancEntry(TypeUnknown type)
+    {
+        StartCoroutine(AppearanceEntry(type));
+    }
+
+    IEnumerator AppearanceEntry(TypeUnknown type)
+    {
+        if (type == TypeUnknown.nameObj)
+        {
+            Color startColor = nameText.color;
+            float visible = 0f;
+            eventText.color = Color.red; //Убрать
+            //while (visible < 1)
+            //{
+            //    visible += Time.deltaTime;
+            //    nameText.color = new Color(startColor.r, startColor.g, startColor.b, visible);
+
+            //    yield return null;
+            //}
+        }
+        else if (type == TypeUnknown.place)
+        {
+            Color startColor = placeText.color;
+            float visible = 0f;
+            eventText.color = Color.red; //Убрать
+            //while (visible < 1)
+            //{
+            //    visible += Time.deltaTime;
+            //    placeText.color = new Color(startColor.r, startColor.g, startColor.b, visible);
+
+            //    yield return null;
+            //}
+        }
+        else if (type == TypeUnknown.eventHeppen)
+        {
+            Color startColor = eventText.color;
+            float visible = 0f;
+            eventText.color = Color.red; //Убрать
+            //while (visible < 1)
+            //{
+            //    visible += Time.deltaTime;
+            //    eventText.color = new Color(startColor.r, startColor.g, startColor.b, visible);
+
+            //    yield return null;
+            //}
+        }
+        yield return null; //Убрать
+
     }
 }

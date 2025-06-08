@@ -29,12 +29,7 @@ public class FirstPersonController : MonoBehaviour
         charController = GetComponent<CharacterController>();
     }
 
-    void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-    }
-
-
+    
     void Update()
     {
         Velosity();
@@ -43,7 +38,6 @@ public class FirstPersonController : MonoBehaviour
     }
 
     
-
     void Rotation()
     {
         float mouseX = Input.GetAxis("Mouse X") * sensitivity;

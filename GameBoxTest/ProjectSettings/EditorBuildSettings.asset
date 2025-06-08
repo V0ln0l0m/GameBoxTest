@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Notebook.unity
     guid: bce9ec372988944469a09c456db1d046
+  - enabled: 1
+    path: Assets/Scenes/House.unity
+    guid: cf3b497c16328844cab47d490bdb66f7
   m_configObjects: {}

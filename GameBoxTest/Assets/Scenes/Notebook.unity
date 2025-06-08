@@ -452,7 +452,7 @@ MonoBehaviour:
   spaceForLines: {fileID: 456504079}
   linePrefab: {fileID: 2172826546110432328, guid: 9a3b233def823a3489ccd5f51391cb18, type: 3}
   numberOfLines: 19
-  percentKnownData: 100
+  percentKnownData: 60
 --- !u!1 &997155941
 GameObject:
   m_ObjectHideFlags: 0
