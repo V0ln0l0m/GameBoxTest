@@ -7,9 +7,10 @@ public class CursorActions : MonoBehaviour
     [SerializeField] GameManager gameManager;
     [SerializeField] GameObject hintAboutButton;
     [SerializeField] MessageAttenuat messageAtten;
+    [SerializeField] AudioManager audManager;
 
 
-    [SerializeField] LayerMask raycastMask;
+    //[SerializeField] LayerMask raycastMask;
     [SerializeField] LayerMask defaultMask;
     [SerializeField] float raycastDistance;
 
@@ -31,7 +32,8 @@ public class CursorActions : MonoBehaviour
     {
         RaycastHit hit;
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        if (Physics.Raycast(ray, out hit, raycastDistance, raycastMask))
+        if (Physics.Raycast(ray, out hit, raycastDistance) && (hit.collider.tag == "Door" || hit.collider.tag == "TargetObj" ||
+            hit.collider.tag == "Activator"))
         {
             hintAboutButton.SetActive(true);
             cursorAnim.SetBool("FindTarget", true);
@@ -53,12 +55,19 @@ public class CursorActions : MonoBehaviour
             gameManager.LoadNotebook();
         else if (hit.collider.tag == "TargetObj")
         {
-            hit.collider.gameObject.layer = defaultMask;
+            audManager.AddingEntrySound();
+            hit.collider.tag = "Untagged";
             messageAtten.SetVisible();
             findUnknScript.AddingToQueueFounds();
-            
         }
-            
+        else if (hit.collider.tag == "Activator")
+        {
+            hit.collider.gameObject.GetComponentInParent<Activator>().Activation();
+        }
+    }
 
+    public void CursorSound()
+    {
+        audManager.CursorSound();
     }
 }

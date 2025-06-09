@@ -163,6 +163,7 @@ public class NotebookLine : MonoBehaviour
 
     public void ConnectLine()
     {
+        AudioManager.instance.ClickSound();
         NotebookLine selectLine = NotebookManager.selectedLine;
         int indexSelectLine = NoteBookStorage.notebookLines.IndexOf(selectLine);
         int indexLine = NoteBookStorage.notebookLines.IndexOf(this);
@@ -171,6 +172,7 @@ public class NotebookLine : MonoBehaviour
         if (selectLine != null && selectLine.nameObject == nameObject && selectLine.place != "???" &&
             selectLine.eventHappen != "???" && selectLine != this)
         {
+            AudioManager.instance.PageRustlingSound();
             int newIndex = indexSelectLine + selectLine.connectedLines;
             bool above = indexLine < indexSelectLine; 
             if (!above) 
@@ -244,51 +246,50 @@ public class NotebookLine : MonoBehaviour
 
     public void AppearancEntry(TypeUnknown type)
     {
-        StartCoroutine(AppearanceEntry(type));
+        if (type == TypeUnknown.nameObj)
+            StartCoroutine(AppearanceEntryName());
+        else if (type == TypeUnknown.place)
+            StartCoroutine(AppearanceEntryPlace());
+        else if (type == TypeUnknown.eventHeppen)
+            StartCoroutine(AppearanceEntryEvent());
     }
 
-    IEnumerator AppearanceEntry(TypeUnknown type)
+    IEnumerator AppearanceEntryName()
     {
-        if (type == TypeUnknown.nameObj)
+        Color startColor = nameText.color;
+        float visible = 0f;
+        while (visible < 1)
         {
-            Color startColor = nameText.color;
-            float visible = 0f;
-            eventText.color = Color.red; //Убрать
-            //while (visible < 1)
-            //{
-            //    visible += Time.deltaTime;
-            //    nameText.color = new Color(startColor.r, startColor.g, startColor.b, visible);
+            visible += Time.deltaTime;
+            nameText.color = new Color(startColor.r, startColor.g, startColor.b, visible);
 
-            //    yield return null;
-            //}
+            yield return null;
         }
-        else if (type == TypeUnknown.place)
+    }
+
+    IEnumerator AppearanceEntryPlace()
+    {
+        Color startColor = placeText.color;
+        float visible = 0f;
+        while (visible < 1)
         {
-            Color startColor = placeText.color;
-            float visible = 0f;
-            eventText.color = Color.red; //Убрать
-            //while (visible < 1)
-            //{
-            //    visible += Time.deltaTime;
-            //    placeText.color = new Color(startColor.r, startColor.g, startColor.b, visible);
+            visible += Time.deltaTime;
+            placeText.color = new Color(startColor.r, startColor.g, startColor.b, visible);
 
-            //    yield return null;
-            //}
+            yield return null;
         }
-        else if (type == TypeUnknown.eventHeppen)
+    }
+
+    IEnumerator AppearanceEntryEvent()
+    {
+        Color startColor = eventText.color;
+        float visible = 0f;
+        while (visible < 1)
         {
-            Color startColor = eventText.color;
-            float visible = 0f;
-            eventText.color = Color.red; //Убрать
-            //while (visible < 1)
-            //{
-            //    visible += Time.deltaTime;
-            //    eventText.color = new Color(startColor.r, startColor.g, startColor.b, visible);
+            visible += Time.deltaTime;
+            eventText.color = new Color(startColor.r, startColor.g, startColor.b, visible);
 
-            //    yield return null;
-            //}
+            yield return null;
         }
-        yield return null; //Убрать
-
     }
 }

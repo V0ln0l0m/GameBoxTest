@@ -13,13 +13,13 @@ public class GameManager : MonoBehaviour
     
     public void LoadMap()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
         Cursor.lockState = CursorLockMode.None;
     }
 
     public void LoadNotebook()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
         Cursor.lockState = CursorLockMode.None;
     }
 

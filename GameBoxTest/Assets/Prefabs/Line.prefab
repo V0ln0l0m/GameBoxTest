@@ -178,6 +178,8 @@ MonoBehaviour:
   eventHappen: 
   date: 
   main: 0
+  mainConnection: {fileID: 0}
+  namberMainConn: 0
   connectedLines: 0
 --- !u!114 &4950917014952428036
 MonoBehaviour:

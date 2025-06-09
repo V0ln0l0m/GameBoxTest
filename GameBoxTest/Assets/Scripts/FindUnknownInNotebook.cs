@@ -13,7 +13,7 @@ public enum TypeUnknown
 
 public class FindUnknownInNotebook : MonoBehaviour
 {
-    List<FoundPosInNotebook> ListFounds = new List<FoundPosInNotebook>();
+    List<FoundPosInNotebook> listFounds = new List<FoundPosInNotebook>();
 
     private void Start()
     {
@@ -33,7 +33,7 @@ public class FindUnknownInNotebook : MonoBehaviour
                     unknPos.posLineInStorage = i;
                     unknPos.typeUnknown = TypeUnknown.nameObj;
                     unknPos.value = linesStorage[i].ChoosingName();
-                    ListFounds.Add(unknPos);
+                    listFounds.Add(unknPos);
                 }
 
                 if (linesStorage[i].place == "???")
@@ -42,7 +42,7 @@ public class FindUnknownInNotebook : MonoBehaviour
                     unknPos.posLineInStorage = i;
                     unknPos.typeUnknown = TypeUnknown.place;
                     unknPos.value = linesStorage[i].ChoosingPlace();
-                    ListFounds.Add(unknPos);
+                    listFounds.Add(unknPos);
                 }
 
                 if (linesStorage[i].eventHappen == "???")
@@ -51,7 +51,7 @@ public class FindUnknownInNotebook : MonoBehaviour
                     unknPos.posLineInStorage = i;
                     unknPos.typeUnknown = TypeUnknown.eventHeppen;
                     unknPos.value = linesStorage[i].ChoosingEvent();
-                    ListFounds.Add(unknPos);
+                    listFounds.Add(unknPos);
                 }
             }
         }
@@ -59,20 +59,17 @@ public class FindUnknownInNotebook : MonoBehaviour
 
     public void AddingToQueueFounds()
     {
-        if (ListFounds.Count > 0)
+        if (listFounds.Count > 0)
         {
-            for (int i = 0; i < 10; i++) // Убрать после проверки
-            {
-                FoundPosInNotebook found = ListFounds[Random.Range(0, ListFounds.Count)];
-                NoteBookStorage.queueFounds.Enqueue(found);
-            }
-            
+            int index = Random.Range(0, listFounds.Count);
+            FoundPosInNotebook found = listFounds[index];
+            NoteBookStorage.queueFounds.Enqueue(found);
+            listFounds.RemoveAt(index);
         }
         else
         {
-            Debug.Log("Пустые позиции в запесной книжке не найдены");
+            Debug.Log("Пустые позиции в записной книжке не найдены");
         }
-        
     }
 }
 

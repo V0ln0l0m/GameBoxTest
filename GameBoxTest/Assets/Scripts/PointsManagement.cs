@@ -5,6 +5,8 @@ using UnityEngine;
 public class PointsManagement : MonoBehaviour
 {
     [SerializeField] GameObject[] points;
+    [SerializeField] AudioManager audManager;
+
     public static PointFeatures[] pointsFeatures;
 
     public static List<string> nameList = new List<string>();
@@ -79,7 +81,7 @@ public class PointsManagement : MonoBehaviour
 
         for (int i = 0; i < pointsVisible; i++)
         {
-            pointsPos[i] = points[i].transform.localPosition = new Vector3(Random.Range(-750, 350), Random.Range(-350, 350), 0);
+            pointsPos[i] = points[i].transform.localPosition = new Vector3(Random.Range(-640, 460), Random.Range(-350, 350), 0);
             
             for (int j = 0; j < points.Length; j++)  // Проверка дистанции между точками и изменение положения, если ближе 100 к другим
             {
@@ -87,7 +89,7 @@ public class PointsManagement : MonoBehaviour
                 {
                     if (Vector3.Distance(points[i].transform.position, points[j].transform.position) < 100)
                     {
-                        pointsPos[i] = points[i].transform.localPosition = new Vector3(Random.Range(-750, 350), Random.Range(-350, 350), 0);
+                        pointsPos[i] = points[i].transform.localPosition = new Vector3(Random.Range(-640, 460), Random.Range(-350, 350), 0);
                         j--;
                     }
                 }
@@ -95,6 +97,7 @@ public class PointsManagement : MonoBehaviour
 
             points[i].SetActive(true);
             pointsFeatures[i].ChooseLevel_Name();
+            audManager.PointSound();
 
             yield return new WaitForSeconds(0.4f);
         }
@@ -103,6 +106,7 @@ public class PointsManagement : MonoBehaviour
 
     public void PointSelection(int numberPoint)
     {
+        audManager.PointSound();
         for (int i = 0;i < points.Length;i++)
         {
             if (i == numberPoint)

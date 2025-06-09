@@ -7,6 +7,7 @@ public class NotebookManager : MonoBehaviour
 {
     [SerializeField] Transform spaceForLines;
     [SerializeField] GameObject linePrefab;
+    [SerializeField] AudioManager audManager;
 
     [SerializeField] int numberOfLines;
 
@@ -16,7 +17,6 @@ public class NotebookManager : MonoBehaviour
 
     public static NotebookManager instance;
 
-    Queue<FoundPosInNotebook> queueFoundsManager = new Queue<FoundPosInNotebook>();
 
     private void Awake()
     {
@@ -54,21 +54,18 @@ public class NotebookManager : MonoBehaviour
     {
         if (NoteBookStorage.queueFounds.Count > 0)
         {
-            queueFoundsManager = NoteBookStorage.queueFounds; // Для запуска корутин
-
             for (int i = 0; i < NoteBookStorage.queueFounds.Count; i++)
             {
                 FoundPosInNotebook found = NoteBookStorage.queueFounds.Dequeue();
-
                 if (found.typeUnknown == TypeUnknown.nameObj)
                     NoteBookStorage.notebookLines[found.posLineInStorage].nameObject = found.value;
                 else if (found.typeUnknown == TypeUnknown.place)
                     NoteBookStorage.notebookLines[found.posLineInStorage].place = found.value;
                 else if (found.typeUnknown == TypeUnknown.eventHeppen)
                     NoteBookStorage.notebookLines[found.posLineInStorage].eventHappen = found.value;
+                StartCoroutine(AppearanceEntryLines(found));
             }
         }
-        queueFoundsManager = null;
     }
 
     public void FillingFromStorage()
@@ -93,24 +90,19 @@ public class NotebookManager : MonoBehaviour
 
             linesListStorage[i] = lineScript;
 
-            AppearanceEntryLines(queueFoundsManager);
+            
         }
     }
 
-    public void AppearanceEntryLines(Queue<FoundPosInNotebook> founds)
+    IEnumerator AppearanceEntryLines(FoundPosInNotebook found) 
     {
-        if (queueFoundsManager != null)
-        {
-            for (int i = 0; i < founds.Count; i++)
-            {
-                FoundPosInNotebook found = founds.Dequeue();
-                NoteBookStorage.notebookLines[found.posLineInStorage].AppearancEntry(found.typeUnknown);
-            }
-        }
+        yield return null; //задержка, чтобы FillingFromStorage() завершил выполнение
+        NoteBookStorage.notebookLines[found.posLineInStorage].AppearancEntry(found.typeUnknown);
     }
 
     public void SelectionLine()
     {
+        audManager.PageRustlingSound();
         int count = NoteBookStorage.notebookLines.Count;
         for (int i = 0; i < count; i++)
         {

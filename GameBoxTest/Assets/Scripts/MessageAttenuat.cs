@@ -30,7 +30,6 @@ public class MessageAttenuat : MonoBehaviour
         {
             visible -= Time.deltaTime/2;
 
-
             imgHint.color = new Color(colorImg.r, colorImg.g, colorImg.b, Mathf.Clamp (visible, 0, 0.64f));
             textHint.color = new Color(colorText.r, colorText.g, colorText.b, Mathf.Clamp(visible, 0, 0.75f));
         }
